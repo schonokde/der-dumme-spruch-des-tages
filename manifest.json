@@ -1,0 +1,10 @@
+{
+  "name": "Der dumme Spruch des Tages",
+  "short_name": "Dummer Spruch",
+  "description": "Ein bisschen Unsinn für zwischendurch.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b1919",
+  "theme_color": "#102d2b",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

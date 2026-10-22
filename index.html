@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#102d2b">
+<meta name="description" content="Der dumme Spruch des Tages – ein Spruch zum Schmunzeln.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Der dumme Spruch des Tages</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1919;--panel:#102d2b;--gold:#e8c66a;--muted:#a9b9b5;--text:#f4f3e9;--line:#2c4945}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#173a36 0%,var(--bg) 58%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;display:flex;justify-content:center;padding:24px 16px 40px}
+main{width:min(100%,680px)}header{text-align:center;padding:20px 8px 18px} .mark{font-size:34px;color:var(--gold)}h1{font-size:clamp(1.8rem,7vw,3rem);line-height:1.06;margin:8px 0 10px;letter-spacing:-.04em}header p{margin:0;color:var(--muted)}.date{color:var(--gold);font-size:.9rem;margin-top:18px}
+.card{background:linear-gradient(150deg,rgba(20,54,50,.96),rgba(13,34,33,.98));border:1px solid var(--line);border-radius:24px;padding:clamp(22px,6vw,42px);box-shadow:0 20px 70px #0004;margin:12px 0}.label{font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700}.quote{font-size:clamp(1.45rem,5vw,2.2rem);line-height:1.35;margin:20px 0 18px;font-weight:650;white-space:pre-wrap}.author{color:var(--muted);font-size:1rem}.note{color:#91aaa4;font-size:.8rem;margin-top:10px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:28px}.btn{border:1px solid #46645d;background:#183b36;color:var(--text);padding:13px 15px;border-radius:13px;font:inherit;font-weight:650;cursor:pointer}.btn.primary{background:var(--gold);color:#182723;border-color:var(--gold)}.btn:active{transform:scale(.98)}.tools{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}.tool{background:#102624;border:1px solid var(--line);padding:14px;border-radius:15px}.tool label{display:block;color:var(--muted);font-size:.82rem;margin-bottom:8px}.tool select{width:100%;background:#183431;color:var(--text);border:1px solid #46645d;padding:10px;border-radius:10px;font:inherit}.section-title{font-size:1.15rem;margin:28px 0 12px}.favorites{display:grid;gap:10px}.fav{background:#102624;border:1px solid var(--line);border-radius:14px;padding:15px}.fav p{margin:0 0 8px;line-height:1.4}.fav small{color:var(--muted)}.fav button{margin-top:10px;padding:8px 10px}.empty{color:var(--muted);padding:12px 0}footer{text-align:center;color:#7f9993;font-size:.8rem;margin:28px 0 0}button:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:3px}@media(max-width:420px){.tools{grid-template-columns:1fr}.actions{grid-template-columns:1fr 1fr}.btn{padding:12px 8px;font-size:.92rem}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="mark">✦</div>
+<h1>Der dumme Spruch<br>des Tages</h1>
+<p>Ein bisschen Unsinn für zwischendurch.</p>
+<div class="date" id="today"></div>
+</header>
+<section class="card" aria-live="polite">
+<div class="label">Dein Spruch</div>
+<div class="quote" id="quote"></div>
+<div class="author" id="author"></div>
+<div class="note" id="note"></div>
+<div class="actions">
+<button class="btn primary" id="next">Nächster Spruch ↗</button>
+<button class="btn" id="favorite">♡ Merken</button>
+<button class="btn" id="share">↗ Teilen</button>
+<button class="btn" id="copy">⧉ Kopieren</button>
+</div>
+</section>
+<div class="tools">
+<div class="tool"><label for="filter">Spruch-Auswahl</label><select id="filter"><option value="all">Alle Sprüche</option><option value="Douglas Adams">Douglas Adams</option><option value="John Cleese">John Cleese</option><option value="Terry Pratchett">Terry Pratchett</option><option value="Groucho Marx">Groucho Marx</option><option value="Steve Martin">Steve Martin</option><option value="Mark Twain">Mark Twain</option><option value="Torsten Sträter">Torsten Sträter</option><option value="Dieter Hildebrandt">Dieter Hildebrandt</option><option value="Eigener Spruch">Eigene Sprüche</option></select></div>
+<div class="tool"><label for="dayMode">Tagesansicht</label><select id="dayMode"><option value="daily">Spruch des Tages</option><option value="shuffle">Zufälliger Spruch</option></select></div>
+</div>
+<section>
+<h2 class="section-title">♡ Deine Favoriten</h2>
+<div id="favorites" class="favorites"></div>
+</section>
+<footer>Mit Humor genießen. Zuschreibungen können unbestätigt sein; eigene Sprüche sind entsprechend markiert.</footer>
+</main>
+<script>
+const sayings = [
+{text:"Ich liebe Deadlines. Ich liebe das zischende Geräusch, das sie machen, wenn sie vorbeifliegen.",author:"Douglas Adams",note:"Quelle bitte prüfen"},
+{text:"Es ist erstaunlich, wie viel man erledigen kann, wenn man nicht gerade versucht, etwas zu erledigen.",author:"Eigener Spruch",note:""},
+{text:"Wenn man keine Ahnung hat, einfach mal die Klappe halten.",author:"Dieter Hildebrandt",note:"Zuschreibung bitte prüfen"},
+{text:"Die Wirklichkeit ist nur eine Krücke für Menschen, die mit Fantasie nicht zurechtkommen.",author:"Eigener Spruch",note:""},
+{text:"Ich habe einen ganz einfachen Geschmack: Ich bin immer mit dem Besten zufrieden.",author:"Oscar Wilde",note:"Zuschreibung bitte prüfen"},
+{text:"Man kann ein Problem nicht mit derselben Denkweise lösen, durch die es entstanden ist.",author:"Albert Einstein",note:"Zuschreibung bitte prüfen"},
+{text:"Ich bin in Form. Rund ist auch eine Form.",author:"Eigener Spruch",note:""},
+{text:"Das Geheimnis des Erfolgs ist, den Standpunkt des anderen zu verstehen.",author:"Henry Ford",note:"Zuschreibung bitte prüfen"},
+{text:"Wenn du durch die Hölle gehst, geh weiter.",author:"Winston Churchill",note:"Zuschreibung bitte prüfen"},
+{text:"Ich bin nicht faul. Ich bin im Energiesparmodus.",author:"Eigener Spruch",note:""},
+{text:"Manche Menschen hören den Knall nicht, auch wenn sie direkt neben der Kanone stehen.",author:"Eigener Spruch",note:""},
+{text:"Humor ist, wenn man trotzdem lacht. Und manchmal, wenn man vorher schon lacht.",author:"Eigener Spruch",note:""},
+{text:"Die besten Dinge im Leben sind nicht die, die man für Geld bekommt.",author:"Albert Einstein",note:"Zuschreibung bitte prüfen"},
+{text:"Ich habe heute nichts gelernt, aber ich habe gut aufgepasst.",author:"Eigener Spruch",note:""},
+{text:"Der frühe Vogel fängt den Wurm, aber die zweite Maus bekommt den Käse.",author:"Eigener Spruch",note:""},
+{text:"Wenn alles gegen dich zu laufen scheint, denk daran: Das Flugzeug hebt gegen den Wind ab.",author:"Henry Ford",note:"Zuschreibung bitte prüfen"},
+{text:"Ich wollte die Welt verändern. Dann hat sich die Fernbedienung versteckt.",author:"Eigener Spruch",note:""},
+{text:"Wer zuletzt lacht, hat es wahrscheinlich erst später verstanden.",author:"Eigener Spruch",note:""},
+{text:"Ein Tag ohne Lachen ist ein verlorener Tag.",author:"Charlie Chaplin",note:"Zuschreibung bitte prüfen"},
+{text:"Ich bin nicht sicher, mit welchen Waffen der dritte Weltkrieg geführt wird, aber im vierten mit Stöcken und Steinen.",author:"Albert Einstein",note:"Zuschreibung bitte prüfen"},
+{text:"Das Leben ist zu kurz für irgendwann.",author:"Eigener Spruch",note:""},
+{text:"Ich habe keine Lösung, aber ich bewundere das Problem.",author:"Eigener Spruch",note:""},
+{text:"Wer immer tut, was er schon kann, bleibt immer das, was er schon ist.",author:"Henry Ford",note:"Zuschreibung bitte prüfen"},
+{text:"Man muss die Dinge so tief sehen, dass sie einfach werden.",author:"Konrad Adenauer",note:"Zuschreibung bitte prüfen"},
+{text:"Wenn Plan A nicht funktioniert: Keine Sorge, das Alphabet hat noch 25 weitere Buchstaben.",author:"Eigener Spruch",note:""},
+{text:"Ich denke niemals an die Zukunft. Sie kommt früh genug.",author:"Albert Einstein",note:"Zuschreibung bitte prüfen"},
+{text:"Ein Pessimist ist ein Optimist mit Erfahrung.",author:"Eigener Spruch",note:""},
+{text:"Wer anderen eine Grube gräbt, hat ein Bauprojekt.",author:"Eigener Spruch",note:""},
+{text:"Es gibt mehr Leute, die kapitulieren, als solche, die scheitern.",author:"Henry Ford",note:"Zuschreibung bitte prüfen"},
+{text:"Ich habe heute beschlossen, erwachsen zu werden. Morgen fange ich damit an.",author:"Eigener Spruch",note:""}
+];
+const $=id=>document.getElementById(id);
+let current=0, filtered=sayings.slice();
+const dayIndex=()=>{const d=new Date();return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2020,0,1))/86400000)%filtered.length};
+function show(i){if(!filtered.length)return;current=(i+filtered.length)%filtered.length;const s=filtered[current];$("quote").textContent='„'+s.text+'“';$("author").textContent='— '+s.author;$("note").textContent=s.note;$("favorite").textContent=isFav(s)?'♥ Gemerkt':'♡ Merken';}
+function isFav(s){return getFavs().some(f=>f.text===s.text&&f.author===s.author)}
+function getFavs(){try{return JSON.parse(localStorage.getItem('spruch-favs')||'[]')}catch{return []}}
+function setFavs(v){try{localStorage.setItem('spruch-favs',JSON.stringify(v))}catch{}}
+function renderFavs(){const el=$("favorites"),f=getFavs();el.innerHTML='';if(!f.length){el.innerHTML='<div class="empty">Noch keine Favoriten. Tippe bei einem Spruch auf „Merken“.</div>';return}f.forEach((s,i)=>{const d=document.createElement('div');d.className='fav';const p=document.createElement('p');p.textContent='„'+s.text+'“';const small=document.createElement('small');small.textContent='— '+s.author;const b=document.createElement('button');b.className='btn';b.textContent='Entfernen';b.onclick=()=>{f.splice(i,1);setFavs(f);renderFavs();show(current)};d.append(p,small,b);el.append(d)})}
+function updateFilter(){const f=$("filter").value;filtered=sayings.filter(s=>f==='all'||s.author===f);if(!filtered.length){filtered=sayings.slice()}show($("dayMode").value==='daily'?dayIndex():Math.floor(Math.random()*filtered.length))}
+$("today").textContent=new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
+$("next").onclick=()=>show(Math.floor(Math.random()*filtered.length));
+$("filter").onchange=updateFilter;
+$("dayMode").onchange=()=>show($("dayMode").value==='daily'?dayIndex():Math.floor(Math.random()*filtered.length));
+$("favorite").onclick=()=>{const s=filtered[current],f=getFavs();if(isFav(s)){setFavs(f.filter(x=>!(x.text===s.text&&x.author===s.author)))}else{f.unshift(s);setFavs(f)}renderFavs();show(current)};
+$("copy").onclick=async()=>{const s=filtered[current];const t='„'+s.text+'“ — '+s.author;try{await navigator.clipboard.writeText(t);$("copy").textContent='Kopiert ✓';setTimeout(()=>$("copy").textContent='⧉ Kopieren',1600)}catch{alert(t)}};
+$("share").onclick=async()=>{const s=filtered[current],t='„'+s.text+'“ — '+s.author;if(navigator.share){try{await navigator.share({title:'Der dumme Spruch des Tages',text:t})}catch{}}else{try{await navigator.clipboard.writeText(t);alert('Spruch kopiert – du kannst ihn jetzt teilen.')}catch{alert(t)}}};
+show(dayIndex());renderFavs();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
