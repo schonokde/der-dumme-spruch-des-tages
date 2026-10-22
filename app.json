@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "Der dumme Spruch des Tages",
+    "slug": "der-dumme-spruch-des-tages",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#101E22"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "de.example.dummerspruch"
+    },
+    "android": {
+      "package": "de.example.dummerspruch"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
