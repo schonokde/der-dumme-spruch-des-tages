@@ -36,9 +36,7 @@ main{width:min(100%,680px)}header{text-align:center;padding:20px 8px 18px} .mark
 <button class="btn" id="copy">⧉ Kopieren</button>
 </div>
 </section>
-<div class="tools">
-<div class="tool"><label for="dayMode">Spruch anzeigen</label><select id="dayMode"><option value="daily">Spruch des Tages</option><option value="shuffle">Zufälliger Spruch</option></select></div>
-</div>
+<div class="tool" id="dailyLimit" role="status" style="margin:18px 0;padding:14px;border-radius:14px;background:#102624;border:1px solid var(--line);color:var(--muted)"></div>
 <section>
 <h2 class="section-title">♡ Deine Favoriten</h2>
 <div id="favorites" class="favorites"></div>
@@ -99,22 +97,26 @@ const sayings = [
 ];
 const $=id=>document.getElementById(id);
 let current=0, filtered=sayings.slice();
+const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const dayIndex=()=>{const d=new Date();return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2020,0,1))/86400000)%filtered.length};
-function show(i){if(!filtered.length)return;current=(i+filtered.length)%filtered.length;const s=filtered[current];$("quote").textContent='„'+s.text+'“';$("author").textContent='— '+s.author;$("note").textContent=s.note;$("favorite").textContent=isFav(s)?'♥ Gemerkt':'♡ Merken';}
+function readDaily(){try{const v=JSON.parse(localStorage.getItem('spruch-daily-limit')||'null');if(v&&v.date===todayKey())return v}catch{}return {date:todayKey(),count:0,index:dayIndex()}}
+let daily=readDaily();
+function saveDaily(){try{localStorage.setItem('spruch-daily-limit',JSON.stringify(daily))}catch{}}
+function updateLimit(){const left=Math.max(0,2-daily.count);$('dailyLimit').textContent=left?`Heute geöffnet: ${daily.count} von 2 Sprüchen. Du kannst heute noch ${left} ${left===1?'Spruch':'Sprüche'} öffnen.`:'Tageslimit erreicht: Du hast heute bereits 2 Sprüche geöffnet. Morgen gibt es wieder 2 neue.';$('next').disabled=left===0;$('next').textContent=left===0?'Tageslimit erreicht':'Nächster Spruch ↗';}
+function show(i){if(!filtered.length)return;current=(i+filtered.length)%filtered.length;const s=filtered[current];$('quote').textContent='„'+s.text+'“';$('author').textContent='— '+s.author;$('note').textContent=s.note;$('favorite').textContent=isFav(s)?'♥ Gemerkt':'♡ Merken';}
+function openNext(){if(daily.count>=2){updateLimit();return}if('speechSynthesis' in window)window.speechSynthesis.cancel();$('speak').textContent='🔊 Vorlesen';let next=Math.floor(Math.random()*filtered.length);if(filtered.length>1&&next===current)next=(next+1)%filtered.length;daily.count++;daily.index=next;saveDaily();show(next);updateLimit();}
 function isFav(s){return getFavs().some(f=>f.text===s.text&&f.author===s.author)}
 function getFavs(){try{return JSON.parse(localStorage.getItem('spruch-favs')||'[]')}catch{return []}}
 function setFavs(v){try{localStorage.setItem('spruch-favs',JSON.stringify(v))}catch{}}
 function renderFavs(){const el=$("favorites"),f=getFavs();el.innerHTML='';if(!f.length){el.innerHTML='<div class="empty">Noch keine Favoriten. Tippe bei einem Spruch auf „Merken“.</div>';return}f.forEach((s,i)=>{const d=document.createElement('div');d.className='fav';const p=document.createElement('p');p.textContent='„'+s.text+'“';const small=document.createElement('small');small.textContent='— '+s.author;const b=document.createElement('button');b.className='btn';b.textContent='Entfernen';b.onclick=()=>{f.splice(i,1);setFavs(f);renderFavs();show(current)};d.append(p,small,b);el.append(d)})}
-function updateMode(){filtered=sayings.slice();show($("dayMode").value==='daily'?dayIndex():Math.floor(Math.random()*filtered.length))}
 $("today").textContent=new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
-$("next").onclick=()=>{if('speechSynthesis' in window)window.speechSynthesis.cancel();$("speak").textContent='🔊 Vorlesen';show(Math.floor(Math.random()*filtered.length))};
-
-$("dayMode").onchange=updateMode;
+$("next").onclick=openNext;
 $("favorite").onclick=()=>{const s=filtered[current],f=getFavs();if(isFav(s)){setFavs(f.filter(x=>!(x.text===s.text&&x.author===s.author)))}else{f.unshift(s);setFavs(f)}renderFavs();show(current)};
 $("speak").onclick=()=>{if(!('speechSynthesis' in window)){alert('Vorlesen wird von diesem Browser leider nicht unterstützt.');return}if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();$("speak").textContent='🔊 Vorlesen';return}const s=filtered[current];const utterance=new SpeechSynthesisUtterance(s.text+' Von '+s.author);utterance.lang='de-DE';utterance.onend=()=>$("speak").textContent='🔊 Vorlesen';utterance.onerror=()=>$("speak").textContent='🔊 Vorlesen';$("speak").textContent='⏹ Stoppen';window.speechSynthesis.cancel();window.speechSynthesis.speak(utterance)};
 $("copy").onclick=async()=>{const s=filtered[current];const t='„'+s.text+'“ — '+s.author;try{await navigator.clipboard.writeText(t);$("copy").textContent='Kopiert ✓';setTimeout(()=>$("copy").textContent='⧉ Kopieren',1600)}catch{alert(t)}};
 $("share").onclick=async()=>{const s=filtered[current],t='„'+s.text+'“ — '+s.author;if(navigator.share){try{await navigator.share({title:'Der dumme Spruch des Tages',text:t})}catch{}}else{try{await navigator.clipboard.writeText(t);alert('Spruch kopiert – du kannst ihn jetzt teilen.')}catch{alert(t)}}};
-show(dayIndex());renderFavs();
+if(daily.count===0){daily.count=1;daily.index=dayIndex();saveDaily()}
+current=daily.index||dayIndex();show(current);updateLimit();renderFavs();
 if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
 </body></html>
