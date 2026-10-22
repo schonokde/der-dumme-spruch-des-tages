@@ -12,7 +12,7 @@
 :root{color-scheme:dark;--bg:#0b1919;--panel:#102d2b;--gold:#e8c66a;--muted:#a9b9b5;--text:#f4f3e9;--line:#2c4945}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#173a36 0%,var(--bg) 58%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;display:flex;justify-content:center;padding:24px 16px 40px}
 main{width:min(100%,680px)}header{text-align:center;padding:20px 8px 18px} .mark{font-size:34px;color:var(--gold)}h1{font-size:clamp(1.8rem,7vw,3rem);line-height:1.06;margin:8px 0 10px;letter-spacing:-.04em}header p{margin:0;color:var(--muted)}.date{color:var(--gold);font-size:.9rem;margin-top:18px}
-.card{background:linear-gradient(150deg,rgba(20,54,50,.96),rgba(13,34,33,.98));border:1px solid var(--line);border-radius:24px;padding:clamp(22px,6vw,42px);box-shadow:0 20px 70px #0004;margin:12px 0}.label{font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700}.quote{font-size:clamp(1.45rem,5vw,2.2rem);line-height:1.35;margin:20px 0 18px;font-weight:650;white-space:pre-wrap}.author{color:var(--muted);font-size:1rem}.note{color:#91aaa4;font-size:.8rem;margin-top:10px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:28px}.btn{border:1px solid #46645d;background:#183b36;color:var(--text);padding:13px 15px;border-radius:13px;font:inherit;font-weight:650;cursor:pointer}.btn.primary{background:var(--gold);color:#182723;border-color:var(--gold)}.btn:active{transform:scale(.98)}.tools{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}.tool{background:#102624;border:1px solid var(--line);padding:14px;border-radius:15px}.tool label{display:block;color:var(--muted);font-size:.82rem;margin-bottom:8px}.tool select{width:100%;background:#183431;color:var(--text);border:1px solid #46645d;padding:10px;border-radius:10px;font:inherit}.section-title{font-size:1.15rem;margin:28px 0 12px}.favorites{display:grid;gap:10px}.fav{background:#102624;border:1px solid var(--line);border-radius:14px;padding:15px}.fav p{margin:0 0 8px;line-height:1.4}.fav small{color:var(--muted)}.fav button{margin-top:10px;padding:8px 10px}.empty{color:var(--muted);padding:12px 0}footer{text-align:center;color:#7f9993;font-size:.8rem;margin:28px 0 0}button:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:3px}@media(max-width:420px){.tools{grid-template-columns:1fr}.actions{grid-template-columns:1fr 1fr}.btn{padding:12px 8px;font-size:.92rem}}
+.card{background:linear-gradient(150deg,rgba(20,54,50,.96),rgba(13,34,33,.98));border:1px solid var(--line);border-radius:24px;padding:clamp(22px,6vw,42px);box-shadow:0 20px 70px #0004;margin:12px 0}.label{font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700}.quote{font-size:clamp(1.45rem,5vw,2.2rem);line-height:1.35;margin:20px 0 18px;font-weight:650;white-space:pre-wrap}.author{color:var(--muted);font-size:1rem}.note{color:#91aaa4;font-size:.8rem;margin-top:10px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:28px}.btn{border:1px solid #46645d;background:#183b36;color:var(--text);padding:13px 15px;border-radius:13px;font:inherit;font-weight:650;cursor:pointer}.btn.primary{background:var(--gold);color:#182723;border-color:var(--gold)}.btn:active{transform:scale(.98)}.tools{display:grid;grid-template-columns:1fr;gap:12px;margin:18px 0}.tool{background:#102624;border:1px solid var(--line);padding:14px;border-radius:15px}.tool label{display:block;color:var(--muted);font-size:.82rem;margin-bottom:8px}.tool select{width:100%;background:#183431;color:var(--text);border:1px solid #46645d;padding:10px;border-radius:10px;font:inherit}.section-title{font-size:1.15rem;margin:28px 0 12px}.favorites{display:grid;gap:10px}.fav{background:#102624;border:1px solid var(--line);border-radius:14px;padding:15px}.fav p{margin:0 0 8px;line-height:1.4}.fav small{color:var(--muted)}.fav button{margin-top:10px;padding:8px 10px}.empty{color:var(--muted);padding:12px 0}footer{text-align:center;color:#7f9993;font-size:.8rem;margin:28px 0 0}button:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:3px}@media(max-width:420px){.tools{grid-template-columns:1fr}.actions{grid-template-columns:1fr 1fr}.btn{padding:12px 8px;font-size:.92rem}}
 </style>
 </head>
 <body>
@@ -31,12 +31,13 @@ main{width:min(100%,680px)}header{text-align:center;padding:20px 8px 18px} .mark
 <div class="actions">
 <button class="btn primary" id="next">Nächster Spruch ↗</button>
 <button class="btn" id="favorite">♡ Merken</button>
+<button class="btn" id="speak">🔊 Vorlesen</button>
 <button class="btn" id="share">↗ Teilen</button>
 <button class="btn" id="copy">⧉ Kopieren</button>
 </div>
 </section>
 <div class="tools">
-<div class="tool"><label for="dayMode">Tagesansicht</label><select id="dayMode"><option value="daily">Spruch des Tages</option><option value="shuffle">Zufälliger Spruch</option></select></div>
+<div class="tool"><label for="dayMode">Spruch anzeigen</label><select id="dayMode"><option value="daily">Spruch des Tages</option><option value="shuffle">Zufälliger Spruch</option></select></div>
 </div>
 <section>
 <h2 class="section-title">♡ Deine Favoriten</h2>
@@ -75,7 +76,26 @@ const sayings = [
 {text:"Ein Pessimist ist ein Optimist mit Erfahrung.",author:"Eigener Spruch",note:""},
 {text:"Wer anderen eine Grube gräbt, hat ein Bauprojekt.",author:"Eigener Spruch",note:""},
 {text:"Es gibt mehr Leute, die kapitulieren, als solche, die scheitern.",author:"Henry Ford",note:"Zuschreibung bitte prüfen"},
-{text:"Ich habe heute beschlossen, erwachsen zu werden. Morgen fange ich damit an.",author:"Eigener Spruch",note:""}
+{text:"Mein innerer Schweinehund hat heute Homeoffice beantragt.",author:"Eigener Spruch",note:""},
+{text:"Ich wollte Ordnung schaffen. Jetzt finde ich das Chaos alphabetisch.",author:"Eigener Spruch",note:""},
+{text:"Mein WLAN ist wie meine Motivation: da, aber nicht zuverlässig.",author:"Eigener Spruch",note:""},
+{text:"Ich bin multitaskingfähig: Ich kann gleichzeitig nichts tun und dabei müde werden.",author:"Eigener Spruch",note:""},
+{text:"Der Kaffee ist fertig. Ich noch nicht.",author:"Eigener Spruch",note:""},
+{text:"Ich habe einen Plan. Er ist nur noch nicht über seine Existenz informiert.",author:"Eigener Spruch",note:""},
+{text:"Sport ist Mord. Ich betreibe deshalb lieber gedankliche Bewegung.",author:"Eigener Spruch",note:""},
+{text:"Meine To-do-Liste hat inzwischen eine eigene To-do-Liste.",author:"Eigener Spruch",note:""},
+{text:"Ich bin nicht zu spät. Ich komme in einer anderen Zeitzone an.",author:"Eigener Spruch",note:""},
+{text:"Heute ist ein guter Tag, um morgen anzufangen.",author:"Eigener Spruch",note:""},
+{text:"Wenn das Leben dir Zitronen gibt, frag nach Salz und Tequila.",author:"Eigener Spruch",note:""},
+{text:"Ich brauche keinen Wecker. Meine Sorgen wecken mich zuverlässig.",author:"Eigener Spruch",note:""},
+{text:"Ich habe meine Komfortzone verlassen. Draußen war es ungemütlich, also bin ich zurück.",author:"Eigener Spruch",note:""},
+{text:"Mein Gedächtnis ist hervorragend. Ich erinnere mich nur nicht woran.",author:"Eigener Spruch",note:""},
+{text:"Ich wollte heute produktiv sein. Dann war da plötzlich das Internet.",author:"Eigener Spruch",note:""},
+{text:"Man soll den Tag nicht vor dem Feierabend loben.",author:"Eigener Spruch",note:""},
+{text:"Ich habe die Kontrolle über mein Leben. Sie liegt nur gerade irgendwo unter dem Sofa.",author:"Eigener Spruch",note:""},
+{text:"Erfahrung ist, wenn man die Fehler von gestern heute wiedererkennt.",author:"Eigener Spruch",note:""},
+{text:"Meine Motivation und ich haben uns getrennt. Wir bleiben aber Freunde auf Abstand.",author:"Eigener Spruch",note:""},
+{text:"Ich bin nicht vergesslich. Ich sortiere Informationen nur sehr großzügig aus.",author:"Eigener Spruch",note:""}
 ];
 const $=id=>document.getElementById(id);
 let current=0, filtered=sayings.slice();
@@ -85,12 +105,13 @@ function isFav(s){return getFavs().some(f=>f.text===s.text&&f.author===s.author)
 function getFavs(){try{return JSON.parse(localStorage.getItem('spruch-favs')||'[]')}catch{return []}}
 function setFavs(v){try{localStorage.setItem('spruch-favs',JSON.stringify(v))}catch{}}
 function renderFavs(){const el=$("favorites"),f=getFavs();el.innerHTML='';if(!f.length){el.innerHTML='<div class="empty">Noch keine Favoriten. Tippe bei einem Spruch auf „Merken“.</div>';return}f.forEach((s,i)=>{const d=document.createElement('div');d.className='fav';const p=document.createElement('p');p.textContent='„'+s.text+'“';const small=document.createElement('small');small.textContent='— '+s.author;const b=document.createElement('button');b.className='btn';b.textContent='Entfernen';b.onclick=()=>{f.splice(i,1);setFavs(f);renderFavs();show(current)};d.append(p,small,b);el.append(d)})}
-function updateFilter(){const f=$("filter").value;filtered=sayings.filter(s=>f==='all'||s.author===f);if(!filtered.length){filtered=sayings.slice()}show($("dayMode").value==='daily'?dayIndex():Math.floor(Math.random()*filtered.length))}
+function updateMode(){filtered=sayings.slice();show($("dayMode").value==='daily'?dayIndex():Math.floor(Math.random()*filtered.length))}
 $("today").textContent=new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
-$("next").onclick=()=>show(Math.floor(Math.random()*filtered.length));
-$("filter").onchange=updateFilter;
-$("dayMode").onchange=()=>show($("dayMode").value==='daily'?dayIndex():Math.floor(Math.random()*filtered.length));
+$("next").onclick=()=>{if('speechSynthesis' in window)window.speechSynthesis.cancel();$("speak").textContent='🔊 Vorlesen';show(Math.floor(Math.random()*filtered.length))};
+
+$("dayMode").onchange=updateMode;
 $("favorite").onclick=()=>{const s=filtered[current],f=getFavs();if(isFav(s)){setFavs(f.filter(x=>!(x.text===s.text&&x.author===s.author)))}else{f.unshift(s);setFavs(f)}renderFavs();show(current)};
+$("speak").onclick=()=>{if(!('speechSynthesis' in window)){alert('Vorlesen wird von diesem Browser leider nicht unterstützt.');return}if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();$("speak").textContent='🔊 Vorlesen';return}const s=filtered[current];const utterance=new SpeechSynthesisUtterance(s.text+' Von '+s.author);utterance.lang='de-DE';utterance.onend=()=>$("speak").textContent='🔊 Vorlesen';utterance.onerror=()=>$("speak").textContent='🔊 Vorlesen';$("speak").textContent='⏹ Stoppen';window.speechSynthesis.cancel();window.speechSynthesis.speak(utterance)};
 $("copy").onclick=async()=>{const s=filtered[current];const t='„'+s.text+'“ — '+s.author;try{await navigator.clipboard.writeText(t);$("copy").textContent='Kopiert ✓';setTimeout(()=>$("copy").textContent='⧉ Kopieren',1600)}catch{alert(t)}};
 $("share").onclick=async()=>{const s=filtered[current],t='„'+s.text+'“ — '+s.author;if(navigator.share){try{await navigator.share({title:'Der dumme Spruch des Tages',text:t})}catch{}}else{try{await navigator.clipboard.writeText(t);alert('Spruch kopiert – du kannst ihn jetzt teilen.')}catch{alert(t)}}};
 show(dayIndex());renderFavs();
